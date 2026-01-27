@@ -83,8 +83,8 @@ class PDFService {
     }
   }
 
-  // 计算边界
-  static Rect _calculateBounds(List<Node> nodes) {
+// 计算边界
+  static _Bounds _calculateBounds(List<Node> nodes) {
     double minX = double.infinity;
     double maxX = double.negativeInfinity;
     double minY = double.infinity;
@@ -97,8 +97,18 @@ class PDFService {
       maxY = maxY > node.y + node.height ? maxY : node.y + node.height;
     }
 
-    return Rect.fromLTRB(minX, minY, maxX, maxY);
+    return _Bounds(left: minX, top: minY, right: maxX, bottom: maxY);
   }
+}
+
+class _Bounds {
+  final double left;
+  final double top;
+  final double right;
+  final double bottom;
+
+  _Bounds({required this.left, required this.top, required this.right, required this.bottom});
+}
 }
 
 class _MindMapPDFPainter extends pw.CustomPainter {
@@ -214,9 +224,9 @@ class _MindMapPDFPainter extends pw.CustomPainter {
         );
       }
 
-      // 绘制文字
+// 绘制文字
       final textStyle = pw.TextStyle(
-        color: node.isRoot ? PdfColors.white : PdfColors.black87,
+        color: node.isRoot ? PdfColors.white : PdfColors.black,
         fontSize: PDFService.fontSize,
         fontWeight: pw.FontWeight.bold,
       );
