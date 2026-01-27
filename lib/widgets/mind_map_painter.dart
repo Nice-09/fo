@@ -144,10 +144,8 @@ class MindMapPainter extends CustomPainter {
           ..strokeWidth = 3.0;
 
         canvas.drawLine(
-          rect.left,
-          rect.top,
-          rect.left,
-          rect.bottom,
+          Offset(rect.left, rect.top),
+          Offset(rect.left, rect.bottom),
           sidePaint,
         );
       }

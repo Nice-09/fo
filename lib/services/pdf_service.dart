@@ -2,8 +2,8 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'models/node.dart';
-import 'models/connection.dart';
+import '../models/node.dart';
+import '../models/connection.dart';
 
 class PDFService {
   static const double nodeWidth = 140.0;
@@ -83,7 +83,7 @@ class PDFService {
     }
   }
 
-// 计算边界
+  // 计算边界
   static _Bounds _calculateBounds(List<Node> nodes) {
     double minX = double.infinity;
     double maxX = double.negativeInfinity;
@@ -108,7 +108,6 @@ class _Bounds {
   final double bottom;
 
   _Bounds({required this.left, required this.top, required this.right, required this.bottom});
-}
 }
 
 class _MindMapPDFPainter extends pw.CustomPainter {
@@ -154,24 +153,24 @@ class _MindMapPDFPainter extends pw.CustomPainter {
       final midX = startX + (endX - startX) / 2;
 
       canvas.drawLine(
-        PdfPoint(startX, startY),
-        PdfPoint(midX, startY),
+        pw.Offset(startX, startY),
+        pw.Offset(midX, startY),
         pw.Paint()
           ..color = PdfColors.grey600
           ..lineWidth = 1.5,
       );
 
       canvas.drawLine(
-        PdfPoint(midX, startY),
-        PdfPoint(midX, endY),
+        pw.Offset(midX, startY),
+        pw.Offset(midX, endY),
         pw.Paint()
           ..color = PdfColors.grey600
           ..lineWidth = 1.5,
       );
 
       canvas.drawLine(
-        PdfPoint(midX, endY),
-        PdfPoint(endX, endY),
+        pw.Offset(midX, endY),
+        pw.Offset(endX, endY),
         pw.Paint()
           ..color = PdfColors.grey600
           ..lineWidth = 1.5,
@@ -207,7 +206,7 @@ class _MindMapPDFPainter extends pw.CustomPainter {
         ),
         pw.Paint()
           ..color = node.isRoot
-              ? PdfColors.transparent
+              ? PdfColors.white
               : PdfColors.grey300
           ..lineWidth = 1.0,
       );
@@ -216,15 +215,15 @@ class _MindMapPDFPainter extends pw.CustomPainter {
       if (!node.isRoot && node.level > 0 && node.level <= 5) {
         final color = PDFService.levelColors[node.level] ?? PdfColors.grey;
         canvas.drawLine(
-          PdfPoint(x, y),
-          PdfPoint(x, y + height),
+          pw.Offset(x, y),
+          pw.Offset(x, y + height),
           pw.Paint()
             ..color = color
             ..lineWidth = 3.0,
         );
       }
 
-// 绘制文字
+      // 绘制文字
       final textStyle = pw.TextStyle(
         color: node.isRoot ? PdfColors.white : PdfColors.black,
         fontSize: PDFService.fontSize,
