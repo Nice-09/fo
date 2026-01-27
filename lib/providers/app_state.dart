@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'node.dart';
-import 'connection.dart';
+import '../models/node.dart';
+import '../models/connection.dart';
 
 class AppState extends ChangeNotifier {
   List<Node> nodes = [];

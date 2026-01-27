@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math.dart';
+import '../models/node.dart';
+import '../models/connection.dart';
 
 class MindMapPainter extends CustomPainter {
   final List<Node> nodes;

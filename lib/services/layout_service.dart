@@ -1,4 +1,4 @@
-import 'node.dart';
+import '../models/node.dart';
 
 class LayoutService {
   static const double nodeWidth = 140.0;
