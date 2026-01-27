@@ -42,15 +42,7 @@ class PDFService {
       pw.Page(
         pageFormat: PdfPageFormat(width, height),
         build: (pw.Context context) {
-          return pw.CustomPaint(
-            size: PdfPoint(width, height),
-            painter: _MindMapPDFPainter(
-              nodes: visibleNodes,
-              connections: connections,
-              offsetX: -bounds.left + 50,
-              offsetY: -bounds.top + 50,
-            ),
-          );
+          return _buildMindMap(visibleNodes, connections, bounds);
         },
       ),
     );
@@ -63,6 +55,22 @@ class PDFService {
     await file.writeAsBytes(await pdf.save());
 
     return path;
+  }
+
+  static pw.Widget _buildMindMap(
+    List<Node> nodes,
+    List<Connection> connections,
+    _Bounds bounds,
+  ) {
+    return pw.CustomPaint(
+      size: PdfPoint(bounds.right - bounds.left + 100, bounds.bottom - bounds.top + 100),
+      painter: _MindMapPDFPainter(
+        nodes: nodes,
+        connections: connections,
+        offsetX: -bounds.left + 50,
+        offsetY: -bounds.top + 50,
+      ),
+    );
   }
 
   // 获取可见节点
@@ -153,24 +161,24 @@ class _MindMapPDFPainter extends pw.CustomPainter {
       final midX = startX + (endX - startX) / 2;
 
       canvas.drawLine(
-        pw.Offset(startX, startY),
-        pw.Offset(midX, startY),
+        pw.Point(startX, startY),
+        pw.Point(midX, startY),
         pw.Paint()
           ..color = PdfColors.grey600
           ..lineWidth = 1.5,
       );
 
       canvas.drawLine(
-        pw.Offset(midX, startY),
-        pw.Offset(midX, endY),
+        pw.Point(midX, startY),
+        pw.Point(midX, endY),
         pw.Paint()
           ..color = PdfColors.grey600
           ..lineWidth = 1.5,
       );
 
       canvas.drawLine(
-        pw.Offset(midX, endY),
-        pw.Offset(endX, endY),
+        pw.Point(midX, endY),
+        pw.Point(endX, endY),
         pw.Paint()
           ..color = PdfColors.grey600
           ..lineWidth = 1.5,
@@ -215,8 +223,8 @@ class _MindMapPDFPainter extends pw.CustomPainter {
       if (!node.isRoot && node.level > 0 && node.level <= 5) {
         final color = PDFService.levelColors[node.level] ?? PdfColors.grey;
         canvas.drawLine(
-          pw.Offset(x, y),
-          pw.Offset(x, y + height),
+          pw.Point(x, y),
+          pw.Point(x, y + height),
           pw.Paint()
             ..color = color
             ..lineWidth = 3.0,
