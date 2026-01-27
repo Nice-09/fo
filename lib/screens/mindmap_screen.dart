@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'providers/app_state.dart';
-import 'models/node.dart';
-import 'models/connection.dart';
-import 'widgets/mind_map_painter.dart';
-import 'services/layout_service.dart';
-import 'services/pdf_service.dart';
+import '../providers/app_state.dart';
+import '../models/node.dart';
+import '../models/connection.dart';
+import '../widgets/mind_map_painter.dart';
+import '../services/layout_service.dart';
+import '../services/pdf_service.dart';
 import 'package:open_file/open_file.dart';
 
 class MindMapScreen extends StatefulWidget {
