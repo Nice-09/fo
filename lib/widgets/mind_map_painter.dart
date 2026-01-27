@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vector_math/vector_math.dart';
 import '../models/node.dart';
 import '../models/connection.dart';
 
@@ -10,7 +9,7 @@ class MindMapPainter extends CustomPainter {
   final double scale;
   final double panX;
   final double panY;
-  final Map<String, int> nodeColorMap;
+  final Map<String, Color> nodeColorMap;
 
   MindMapPainter({
     required this.nodes,
@@ -20,12 +19,12 @@ class MindMapPainter extends CustomPainter {
     required this.panX,
     required this.panY,
   }) : nodeColorMap = {
-      '0': Color(0xFF3B82F6), // 蓝色
-      '1': Color(0xFF5B8FF9), // 蓝绿色
-      '2': Color(0xFF5AD8A6), // 绿色
-      '3': Color(0xFFF6BD16), // 黄色
-      '4': Color(0xFFE86452), // 红色
-      '5': Color(0xFF945FB9), // 紫色
+      '0': const Color(0xFF3B82F6), // 蓝色
+      '1': const Color(0xFF5B8FF9), // 蓝绿色
+      '2': const Color(0xFF5AD8A6), // 绿色
+      '3': const Color(0xFFF6BD16), // 黄色
+      '4': const Color(0xFFE86452), // 红色
+      '5': const Color(0xFF945FB9), // 紫色
     };
 
   @override
@@ -46,7 +45,7 @@ class MindMapPainter extends CustomPainter {
 
   void _drawGrid(Canvas canvas, Size size) {
     final gridPaint = Paint()
-      ..color = Colors.grey[300]
+      ..color = Colors.grey.shade300
       ..strokeWidth = 0.5;
 
     const gridSize = 20.0;
@@ -68,7 +67,7 @@ class MindMapPainter extends CustomPainter {
 
   void _drawConnections(Canvas canvas) {
     final connectionPaint = Paint()
-      ..color = Colors.grey[600]
+      ..color = Colors.grey.shade600
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
@@ -135,7 +134,7 @@ class MindMapPainter extends CustomPainter {
       final borderPaint = Paint()
         ..color = node.isRoot
             ? Colors.transparent
-            : Colors.grey[300]
+            : Colors.grey.shade300
         ..strokeWidth = 1.0
         ..style = PaintingStyle.stroke;
 
@@ -211,7 +210,7 @@ class MindMapPainter extends CustomPainter {
     final buttonY = rect.top + (rect.height - buttonSize) / 2;
 
     final buttonPaint = Paint()
-      ..color = Colors.grey[400]
+      ..color = Colors.grey.shade400
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke
       ..isAntiAlias = true;
