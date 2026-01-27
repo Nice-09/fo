@@ -11,6 +11,7 @@ class Node {
   int level;
   bool isExpanded;
   bool isCollapsed;
+  bool isSelected;
 
   Node({
     this.id,
@@ -25,6 +26,7 @@ class Node {
     this.level = 0,
     this.isExpanded = true,
     this.isCollapsed = false,
+    this.isSelected = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -41,6 +43,7 @@ class Node {
       'level': level,
       'isExpanded': isExpanded,
       'isCollapsed': isCollapsed,
+      'isSelected': isSelected,
     };
   }
 
@@ -58,6 +61,7 @@ class Node {
       level: json['level'] ?? 0,
       isExpanded: json['isExpanded'] ?? true,
       isCollapsed: json['isCollapsed'] ?? false,
+      isSelected: json['isSelected'] ?? false,
     );
   }
 
@@ -74,6 +78,7 @@ class Node {
     int? level,
     bool? isExpanded,
     bool? isCollapsed,
+    bool? isSelected,
   }) {
     return Node(
       id: id ?? this.id,
@@ -88,6 +93,7 @@ class Node {
       level: level ?? this.level,
       isExpanded: isExpanded ?? this.isExpanded,
       isCollapsed: isCollapsed ?? this.isCollapsed,
+      isSelected: isSelected ?? this.isSelected,
     );
   }
 }

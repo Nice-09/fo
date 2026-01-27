@@ -18,7 +18,7 @@ class AppState extends ChangeNotifier {
   static const int _maxHistory = 50;
 
   AppState() {
-    _loadFromStorage();
+    _createRootNode();
   }
 
   // 添加节点

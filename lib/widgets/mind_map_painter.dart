@@ -29,10 +29,6 @@ class MindMapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..isAntiAlias = true
-      ..style = PaintingStyle.fill;
-
     // 绘制背景网格
     _drawGrid(canvas, size);
 
@@ -49,14 +45,14 @@ class MindMapPainter extends CustomPainter {
       ..strokeWidth = 0.5;
 
     const gridSize = 20.0;
-    for (var x = 0; x < size.width; x += gridSize) {
+    for (var x = 0.0; x < size.width; x += gridSize) {
       canvas.drawLine(
         Offset(x, 0),
         Offset(x, size.height),
         gridPaint,
       );
     }
-    for (var y = 0; y < size.height; y += gridSize) {
+    for (var y = 0.0; y < size.height; y += gridSize) {
       canvas.drawLine(
         Offset(0, y),
         Offset(size.width, y),
@@ -86,7 +82,6 @@ class MindMapPainter extends CustomPainter {
 
       // 绘制水平-垂直-水平折线
       final sourceWidth = 140.0;
-      const targetWidth = 140.0;
       const nodeHeight = 50.0;
 
       final startX = sourceNode.x * scale + panX + sourceWidth;
@@ -107,8 +102,6 @@ class MindMapPainter extends CustomPainter {
   }
 
   void _drawNodes(Canvas canvas) {
-    final visibleNodeIds = visibleNodes.map((n) => n.id!).toSet();
-
     for (final node in visibleNodes) {
       final rect = Rect.fromLTWH(
         node.x * scale + panX,
@@ -120,7 +113,7 @@ class MindMapPainter extends CustomPainter {
       // 节点背景
       final nodePaint = Paint()
         ..color = node.isRoot
-            ? Color(0xFF3B82F6)
+            ? const Color(0xFF3B82F6)
             : Colors.white
         ..style = PaintingStyle.fill
         ..maskFilter = MaskFilter.blur(BlurStyle.normal, 4);
@@ -164,7 +157,7 @@ class MindMapPainter extends CustomPainter {
         text: TextSpan(
           text: node.text,
           style: TextStyle(
-            color: node.isRoot ? Colors.white : Colors.black87,
+            color: node.isRoot ? Colors.white : Colors.black,
             fontSize: 14.0 * scale,
             fontWeight: FontWeight.w500,
           ),
