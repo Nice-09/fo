@@ -57,10 +57,8 @@ class PDFService {
                     color: node.isRoot
                         ? levelColors[0]
                         : PdfColors.white,
-                    border: pw.Border.all(
-                      color: node.isRoot
-                          ? PdfColors.transparent
-                          : PdfColors.grey300,
+                    border: node.isRoot ? null : pw.Border.all(
+                      color: PdfColors.grey300,
                       width: 1.0,
                     ),
                   ),
