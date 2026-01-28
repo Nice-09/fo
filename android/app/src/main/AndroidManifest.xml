@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mindmap.mindmap_flutter">
     <application
         android:label="思维导图"
         android:name="${applicationName}"
@@ -24,8 +25,5 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <meta-data
-            android:name="android.max_aspect"
-            android:value="2.1" />
     </application>
 </manifest>
