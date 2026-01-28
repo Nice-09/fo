@@ -15,7 +15,7 @@ class PDFService {
   // 颜色映射
   static const Map<int, PdfColor> levelColors = {
     0: PdfColor.fromInt(0xFF3B82F6), // 蓝色
-    1: PdfColor.fromInt(0xFF5B8FF9), // 蓝绿色
+    1: PdfColor.fromInt(0xFF5B8FF9), // 浅蓝色
     2: PdfColor.fromInt(0xFF5AD8A6), // 绿色
     3: PdfColor.fromInt(0xFFF6BD16), // 黄色
     4: PdfColor.fromInt(0xFFE86452), // 红色
@@ -42,7 +42,41 @@ class PDFService {
       pw.Page(
         pageFormat: PdfPageFormat(width, height),
         build: (pw.Context context) {
-          return _buildMindMap(visibleNodes, connections, bounds);
+          return pw.Column(
+            children: visibleNodes.map((node) {
+              final x = node.x + 50 - bounds.left;
+              final y = node.y + 50 - bounds.top;
+
+              return pw.Positioned(
+                left: x,
+                top: y,
+                child: pw.Container(
+                  width: node.width,
+                  height: node.height,
+                  decoration: pw.BoxDecoration(
+                    color: node.isRoot
+                        ? levelColors[0]
+                        : PdfColors.white,
+                    border: pw.Border.all(
+                      color: node.isRoot
+                          ? PdfColors.transparent
+                          : PdfColors.grey300,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: pw.Center(
+                    child: pw.Text(
+                      node.text,
+                      style: pw.TextStyle(
+                        color: node.isRoot ? PdfColors.white : PdfColors.black,
+                        fontSize: fontSize,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          );
         },
       ),
     );
@@ -55,22 +89,6 @@ class PDFService {
     await file.writeAsBytes(await pdf.save());
 
     return path;
-  }
-
-  static pw.Widget _buildMindMap(
-    List<Node> nodes,
-    List<Connection> connections,
-    _Bounds bounds,
-  ) {
-    return pw.CustomPaint(
-      size: PdfPoint(bounds.right - bounds.left + 100, bounds.bottom - bounds.top + 100),
-      painter: _MindMapPDFPainter(
-        nodes: nodes,
-        connections: connections,
-        offsetX: -bounds.left + 50,
-        offsetY: -bounds.top + 50,
-      ),
-    );
   }
 
   // 获取可见节点
@@ -116,142 +134,4 @@ class _Bounds {
   final double bottom;
 
   _Bounds({required this.left, required this.top, required this.right, required this.bottom});
-}
-
-class _MindMapPDFPainter extends pw.CustomPainter {
-  final List<Node> nodes;
-  final List<Connection> connections;
-  final double offsetX;
-  final double offsetY;
-
-  _MindMapPDFPainter({
-    required this.nodes,
-    required this.connections,
-    required this.offsetX,
-    required this.offsetY,
-  });
-
-  @override
-  void paint(pw.Canvas canvas) {
-    // 绘制连接线
-    _drawConnections(canvas);
-
-    // 绘制节点
-    _drawNodes(canvas);
-  }
-
-  void _drawConnections(pw.Canvas canvas) {
-    final visibleNodeIds = nodes.map((n) => n.id!).toSet();
-
-    for (final connection in connections) {
-      final sourceNode = nodes.firstWhere((n) => n.id == connection.sourceId);
-      final targetNode = nodes.firstWhere((n) => n.id == connection.targetId);
-
-      if (!visibleNodeIds.contains(sourceNode.id!) ||
-          !visibleNodeIds.contains(targetNode.id!)) {
-        continue;
-      }
-
-      // 绘制连接线
-      final startX = sourceNode.x + sourceNode.width + offsetX;
-      final startY = sourceNode.y + sourceNode.height / 2 + offsetY;
-      final endX = targetNode.x + offsetX;
-      final endY = targetNode.y + targetNode.height / 2 + offsetY;
-
-      final midX = startX + (endX - startX) / 2;
-
-      canvas.drawLine(
-        pw.Point(startX, startY),
-        pw.Point(midX, startY),
-        pw.Paint()
-          ..color = PdfColors.grey600
-          ..lineWidth = 1.5,
-      );
-
-      canvas.drawLine(
-        pw.Point(midX, startY),
-        pw.Point(midX, endY),
-        pw.Paint()
-          ..color = PdfColors.grey600
-          ..lineWidth = 1.5,
-      );
-
-      canvas.drawLine(
-        pw.Point(midX, endY),
-        pw.Point(endX, endY),
-        pw.Paint()
-          ..color = PdfColors.grey600
-          ..lineWidth = 1.5,
-      );
-    }
-  }
-
-  void _drawNodes(pw.Canvas canvas) {
-    for (final node in nodes) {
-      final x = node.x + offsetX;
-      final y = node.y + offsetY;
-      final width = node.width;
-      final height = node.height;
-
-      // 绘制节点背景
-      canvas.drawRRect(
-        pw.RRect.fromRectAndRadius(
-          pw.Rect(x, y, width, height),
-          pw.Radius.circular(4),
-        ),
-        pw.Paint()
-          ..color = node.isRoot
-              ? PDFService.levelColors[0]
-              : PdfColors.white
-          ..fill = true,
-      );
-
-      // 绘制节点边框
-      canvas.drawRRect(
-        pw.RRect.fromRectAndRadius(
-          pw.Rect(x, y, width, height),
-          pw.Radius.circular(4),
-        ),
-        pw.Paint()
-          ..color = node.isRoot
-              ? PdfColors.white
-              : PdfColors.grey300
-          ..lineWidth = 1.0,
-      );
-
-      // 绘制左边框颜色指示
-      if (!node.isRoot && node.level > 0 && node.level <= 5) {
-        final color = PDFService.levelColors[node.level] ?? PdfColors.grey;
-        canvas.drawLine(
-          pw.Point(x, y),
-          pw.Point(x, y + height),
-          pw.Paint()
-            ..color = color
-            ..lineWidth = 3.0,
-        );
-      }
-
-      // 绘制文字
-      final textStyle = pw.TextStyle(
-        color: node.isRoot ? PdfColors.white : PdfColors.black,
-        fontSize: PDFService.fontSize,
-        fontWeight: pw.FontWeight.bold,
-      );
-
-      canvas.drawText(
-        pw.Text(
-          node.text,
-          style: textStyle,
-        ),
-        x + 8,
-        y + (height - PDFService.fontSize) / 2,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(_MindMapPDFPainter oldDelegate) {
-    return oldDelegate.nodes != nodes ||
-        oldDelegate.connections != connections;
-  }
 }

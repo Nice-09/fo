@@ -23,7 +23,9 @@ class AppState extends ChangeNotifier {
 
   // 添加节点
   Node addNode(Node node) {
-    node.id = nodeIdCounter++.toString();
+    var newId = nodeIdCounter.toString();
+    node.id = newId;
+    nodeIdCounter++;
     nodes.add(node);
     notifyListeners();
     return node;
